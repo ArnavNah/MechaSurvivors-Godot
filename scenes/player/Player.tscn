@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=29 format=3]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_plr"]
 [ext_resource type="Script" path="res://components/health_component.gd" id="2_hlth"]
@@ -10,42 +10,123 @@
 radius = 0.5
 height = 1.8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
-albedo_color = Color(0.2, 0.4, 0.9, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_armor_blue"]
+albedo_color = Color(0.18, 0.42, 0.92, 1)
+metallic = 0.85
+metallic_specular = 0.6
+roughness = 0.28
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
-material = SubResource("StandardMaterial3D_body")
-radius = 0.45
-height = 1.6
+[sub_resource type="StandardMaterial3D" id="Mat_armor_dark"]
+albedo_color = Color(0.12, 0.13, 0.16, 1)
+metallic = 0.9
+roughness = 0.35
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
-albedo_color = Color(0.4, 0.6, 1, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_armor_gold"]
+albedo_color = Color(0.95, 0.68, 0.15, 1)
+metallic = 0.8
+roughness = 0.25
 
-[sub_resource type="BoxMesh" id="BoxMesh_head"]
-material = SubResource("StandardMaterial3D_head")
-size = Vector3(0.4, 0.3, 0.3)
+[sub_resource type="StandardMaterial3D" id="Mat_energy_cyan"]
+albedo_color = Color(0.2, 0.85, 1, 1)
+emission_enabled = true
+emission = Color(0.2, 0.9, 1, 1)
+emission_energy_multiplier = 4.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_weapon"]
-albedo_color = Color(0.3, 0.3, 0.35, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_weapon_metal"]
+albedo_color = Color(0.2, 0.22, 0.28, 1)
+metallic = 0.9
+roughness = 0.2
 
-[sub_resource type="BoxMesh" id="BoxMesh_weapon"]
-material = SubResource("StandardMaterial3D_weapon")
-size = Vector3(0.15, 0.15, 0.8)
+[sub_resource type="BoxMesh" id="Mesh_torso"]
+material = SubResource("Mat_armor_blue")
+size = Vector3(0.68, 0.6, 0.46)
+
+[sub_resource type="CylinderMesh" id="Mesh_chest_core"]
+material = SubResource("Mat_energy_cyan")
+top_radius = 0.14
+bottom_radius = 0.14
+height = 0.1
+radial_segments = 12
+
+[sub_resource type="BoxMesh" id="Mesh_waist"]
+material = SubResource("Mat_armor_dark")
+size = Vector3(0.48, 0.3, 0.38)
+
+[sub_resource type="BoxMesh" id="Mesh_pauldron"]
+material = SubResource("Mat_armor_gold")
+size = Vector3(0.32, 0.25, 0.4)
+
+[sub_resource type="BoxMesh" id="Mesh_arm"]
+material = SubResource("Mat_armor_blue")
+size = Vector3(0.2, 0.45, 0.22)
+
+[sub_resource type="BoxMesh" id="Mesh_leg"]
+material = SubResource("Mat_armor_blue")
+size = Vector3(0.25, 0.55, 0.28)
+
+[sub_resource type="BoxMesh" id="Mesh_head"]
+material = SubResource("Mat_armor_blue")
+size = Vector3(0.38, 0.32, 0.36)
+
+[sub_resource type="BoxMesh" id="Mesh_visor"]
+material = SubResource("Mat_energy_cyan")
+size = Vector3(0.28, 0.07, 0.08)
+
+[sub_resource type="BoxMesh" id="Mesh_backpack"]
+material = SubResource("Mat_armor_dark")
+size = Vector3(0.42, 0.45, 0.22)
+
+[sub_resource type="CylinderMesh" id="Mesh_thruster_nozzle"]
+material = SubResource("Mat_weapon_metal")
+top_radius = 0.08
+bottom_radius = 0.1
+height = 0.2
+radial_segments = 8
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_thruster"]
+direction = Vector3(0, -0.5, 1)
+spread = 15.0
+initial_velocity_min = 2.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.08
+scale_max = 0.16
+color = Color(0.2, 0.8, 1, 0.8)
+
+[sub_resource type="QuadMesh" id="QuadMesh_flame"]
+material = SubResource("Mat_energy_cyan")
+size = Vector2(0.12, 0.12)
+
+[sub_resource type="BoxMesh" id="Mesh_rifle_body"]
+material = SubResource("Mat_weapon_metal")
+size = Vector3(0.18, 0.2, 0.65)
+
+[sub_resource type="BoxMesh" id="Mesh_rifle_energy"]
+material = SubResource("Mat_energy_cyan")
+size = Vector3(0.12, 0.06, 0.35)
+
+[sub_resource type="CylinderMesh" id="Mesh_rifle_barrel"]
+material = SubResource("Mat_weapon_metal")
+top_radius = 0.05
+bottom_radius = 0.06
+height = 0.4
+radial_segments = 8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_magnet"]
 radius = 5.0
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_flash"]
 direction = Vector3(0, 0, -1)
-spread = 20.0
-initial_velocity_min = 5.0
-initial_velocity_max = 10.0
+spread = 25.0
+initial_velocity_min = 6.0
+initial_velocity_max = 12.0
 gravity = Vector3(0, 0, 0)
 scale_min = 0.1
-scale_max = 0.3
-color = Color(1, 0.8, 0.2, 1)
+scale_max = 0.25
+color = Color(0.3, 0.9, 1, 1)
 
 [sub_resource type="QuadMesh" id="QuadMesh_flash"]
+material = SubResource("Mat_energy_cyan")
 
 [node name="Player" type="CharacterBody3D"]
 collision_layer = 2
@@ -58,27 +139,98 @@ shape = SubResource("CapsuleShape3D_player")
 
 [node name="VisualRoot" type="Node3D" parent="."]
 
-[node name="Body" type="MeshInstance3D" parent="VisualRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-mesh = SubResource("CapsuleMesh_body")
+[node name="Waist" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("Mesh_waist")
+
+[node name="Torso" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+mesh = SubResource("Mesh_torso")
+
+[node name="ChestCore" type="MeshInstance3D" parent="VisualRoot/Torso"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.05, -0.24)
+mesh = SubResource("Mesh_chest_core")
 
 [node name="Head" type="MeshInstance3D" parent="VisualRoot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-mesh = SubResource("BoxMesh_head")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("Mesh_head")
+
+[node name="Visor" type="MeshInstance3D" parent="VisualRoot/Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.19)
+mesh = SubResource("Mesh_visor")
+
+[node name="ShoulderL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.48, 1.15, 0)
+mesh = SubResource("Mesh_pauldron")
+
+[node name="ArmL" type="MeshInstance3D" parent="VisualRoot/ShoulderL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0.05)
+mesh = SubResource("Mesh_arm")
+
+[node name="ShoulderR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.48, 1.15, 0)
+mesh = SubResource("Mesh_pauldron")
+
+[node name="ArmR" type="MeshInstance3D" parent="VisualRoot/ShoulderR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.35, 0.05)
+mesh = SubResource("Mesh_arm")
+
+[node name="LegL" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.28, 0)
+mesh = SubResource("Mesh_leg")
+
+[node name="LegR" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.28, 0)
+mesh = SubResource("Mesh_leg")
+
+[node name="Backpack" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0.28)
+mesh = SubResource("Mesh_backpack")
+
+[node name="ThrusterL" type="MeshInstance3D" parent="VisualRoot/Backpack"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, -0.15, -0.1, 0.12)
+mesh = SubResource("Mesh_thruster_nozzle")
+
+[node name="FlameL" type="GPUParticles3D" parent="VisualRoot/Backpack/ThrusterL"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, 0)
+amount = 12
+process_material = SubResource("ParticleProcessMaterial_thruster")
+draw_pass_1 = SubResource("QuadMesh_flame")
+
+[node name="ThrusterR" type="MeshInstance3D" parent="VisualRoot/Backpack"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0.15, -0.1, 0.12)
+mesh = SubResource("Mesh_thruster_nozzle")
+
+[node name="FlameR" type="GPUParticles3D" parent="VisualRoot/Backpack/ThrusterR"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, 0)
+amount = 12
+process_material = SubResource("ParticleProcessMaterial_thruster")
+draw_pass_1 = SubResource("QuadMesh_flame")
 
 [node name="WeaponPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 
-[node name="WeaponMesh" type="MeshInstance3D" parent="WeaponPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.3)
-mesh = SubResource("BoxMesh_weapon")
+[node name="WeaponMesh" type="Node3D" parent="WeaponPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0, 0)
+
+[node name="Body" type="MeshInstance3D" parent="WeaponPivot/WeaponMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+mesh = SubResource("Mesh_rifle_body")
+
+[node name="EnergyCoil" type="MeshInstance3D" parent="WeaponPivot/WeaponMesh"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, -0.28)
+mesh = SubResource("Mesh_rifle_energy")
+
+[node name="Barrel" type="MeshInstance3D" parent="WeaponPivot/WeaponMesh"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0, -0.65)
+mesh = SubResource("Mesh_rifle_barrel")
 
 [node name="Muzzle" type="Marker3D" parent="WeaponPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0, -0.9)
 
 [node name="MuzzleFlash" type="GPUParticles3D" parent="WeaponPivot/Muzzle"]
 emitting = false
-amount = 6
+amount = 8
 one_shot = true
 process_material = SubResource("ParticleProcessMaterial_flash")
 draw_pass_1 = SubResource("QuadMesh_flash")
