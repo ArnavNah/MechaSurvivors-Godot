@@ -1,0 +1,91 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/enemy_melee.gd" id="1_melee"]
+[ext_resource type="Script" path="res://components/health_component.gd" id="2_health"]
+[ext_resource type="Script" path="res://components/hurtbox_component.gd" id="3_hurtbox"]
+[ext_resource type="Script" path="res://components/hitbox_component.gd" id="4_hitbox"]
+[ext_resource type="Resource" path="res://resources/data/enemy_melee_stats.tres" id="5_stats"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.35
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mat"]
+albedo_color = Color(0.9, 0.15, 0.15, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = SubResource("StandardMaterial3D_mat")
+radius = 0.3
+height = 1.2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hurtbox"]
+radius = 0.45
+height = 1.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hitbox"]
+radius = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_part"]
+albedo_color = Color(0.9, 0.15, 0.15, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_part"]
+material = SubResource("StandardMaterial3D_part")
+size = Vector3(0.2, 0.2, 0.2)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_part"]
+direction = Vector3(0, 1, 0)
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+
+[node name="EnemyMelee" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_melee")
+stats = ExtResource("5_stats")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="VisualRoot"]
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+target_desired_distance = 1.5
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_health")
+
+[node name="HurtboxComponent" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("3_hurtbox")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape3D_hurtbox")
+
+[node name="HitboxComponent" type="Area3D" parent="."]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("4_hitbox")
+damage = 15.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("SphereShape3D_hitbox")
+
+[node name="DeathParticles" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 12
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_part")
+draw_pass_1 = SubResource("BoxMesh_part")
+
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 1.0
+one_shot = true
+
+[connection signal="died" from="HealthComponent" to="." method="_on_health_component_died"]
+[connection signal="hurt" from="HurtboxComponent" to="." method="_on_hurtbox_hurt"]
+[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]

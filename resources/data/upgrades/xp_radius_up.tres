@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="UpgradeResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/upgrade_resource.gd" id="1_upg"]
+
+[resource]
+script = ExtResource("1_upg")
+upgrade_name = "Magnetic Core"
+description = "Increase XP pickup radius by 20%"
+stat_target = 5
+modifier_type = 1
+modifier_value = 0.2

@@ -1,0 +1,56 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/spawning/enemy_spawn_effect.gd" id="1_effect"]
+
+[sub_resource type="StandardMaterial3D" id="Material_ring"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.1, 0.8, 1, 0.85)
+emission_enabled = true
+emission = Color(0.05, 0.65, 1, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="TorusMesh" id="Mesh_ring"]
+material = SubResource("Material_ring")
+inner_radius = 0.75
+outer_radius = 1.0
+rings = 16
+ring_segments = 24
+
+[sub_resource type="ParticleProcessMaterial" id="Particles_spawn"]
+direction = Vector3(0, 1, 0)
+spread = 75.0
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -5, 0)
+scale_min = 0.08
+scale_max = 0.18
+color = Color(0.1, 0.8, 1, 1)
+
+[sub_resource type="QuadMesh" id="Mesh_particle"]
+material = SubResource("Material_ring")
+size = Vector2(0.16, 0.16)
+
+[node name="EnemySpawnEffect" type="Node3D"]
+script = ExtResource("1_effect")
+
+[node name="SpawnRing" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.08, 0)
+mesh = SubResource("Mesh_ring")
+
+[node name="SpawnParticles" type="GPUParticles3D" parent="."]
+position = Vector3(0, 0.15, 0)
+emitting = false
+amount = 28
+lifetime = 0.45
+one_shot = true
+explosiveness = 0.95
+process_material = SubResource("Particles_spawn")
+draw_pass_1 = SubResource("Mesh_particle")
+
+[node name="FlashLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 0.65, 0)
+light_color = Color(0.1, 0.75, 1, 1)
+light_energy = 0.0
+omni_range = 4.5
+shadow_enabled = false

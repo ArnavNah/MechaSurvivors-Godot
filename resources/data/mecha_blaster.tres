@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeaponResource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/weapon_resource.gd" id="1_weapon"]
+
+[resource]
+script = ExtResource("1_weapon")
+weapon_name = "Mecha Blaster"
+damage = 25.0
+fire_rate = 0.25
+projectile_speed = 35.0
+projectile_count = 1
+spread_angle = 0.0
+projectile_scene = null

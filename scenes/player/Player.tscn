@@ -1,0 +1,118 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="Script" path="res://scenes/player/player.gd" id="1_plr"]
+[ext_resource type="Script" path="res://components/health_component.gd" id="2_hlth"]
+[ext_resource type="Script" path="res://components/hurtbox_component.gd" id="3_hurt"]
+[ext_resource type="Script" path="res://components/weapon_component.gd" id="4_wpn"]
+[ext_resource type="Script" path="res://components/xp_component.gd" id="5_xp"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.5
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_body"]
+albedo_color = Color(0.2, 0.4, 0.9, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = SubResource("StandardMaterial3D_body")
+radius = 0.45
+height = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_head"]
+albedo_color = Color(0.4, 0.6, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_head"]
+material = SubResource("StandardMaterial3D_head")
+size = Vector3(0.4, 0.3, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_weapon"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_weapon"]
+material = SubResource("StandardMaterial3D_weapon")
+size = Vector3(0.15, 0.15, 0.8)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_magnet"]
+radius = 5.0
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_flash"]
+direction = Vector3(0, 0, -1)
+spread = 20.0
+initial_velocity_min = 5.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.1
+scale_max = 0.3
+color = Color(1, 0.8, 0.2, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_flash"]
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_plr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="VisualRoot" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="Head" type="MeshInstance3D" parent="VisualRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+mesh = SubResource("BoxMesh_head")
+
+[node name="WeaponPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+
+[node name="WeaponMesh" type="MeshInstance3D" parent="WeaponPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.3)
+mesh = SubResource("BoxMesh_weapon")
+
+[node name="Muzzle" type="Marker3D" parent="WeaponPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0, -0.7)
+
+[node name="MuzzleFlash" type="GPUParticles3D" parent="WeaponPivot/Muzzle"]
+emitting = false
+amount = 6
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_flash")
+draw_pass_1 = SubResource("QuadMesh_flash")
+
+[node name="CameraFollowPoint" type="RemoteTransform3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0, 0)
+remote_path = NodePath("../../CameraRig")
+update_rotation = false
+update_scale = false
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_hlth")
+max_hp = 200.0
+
+[node name="HurtboxComponent" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+collision_layer = 2
+collision_mask = 20
+script = ExtResource("3_hurt")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="WeaponComponent" type="Node3D" parent="."]
+script = ExtResource("4_wpn")
+muzzle_path = NodePath("../WeaponPivot/Muzzle")
+projectile_container_path = NodePath("..")
+
+[node name="XPComponent" type="Node" parent="."]
+script = ExtResource("5_xp")
+
+[node name="XPMagnetArea" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 32
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="XPMagnetArea"]
+shape = SubResource("SphereShape3D_magnet")

@@ -1,0 +1,391 @@
+[gd_scene load_steps=22 format=3]
+
+[ext_resource type="NavigationMesh" path="res://scenes/dungeon/TestArenaNavigation.tres" id="1_navmesh"]
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.12, 0.18, 0.24, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_wall"]
+albedo_color = Color(0.27, 0.39, 0.52, 1)
+roughness = 0.82
+
+[sub_resource type="StandardMaterial3D" id="Material_cover"]
+albedo_color = Color(0.52, 0.31, 0.16, 1)
+roughness = 0.88
+
+[sub_resource type="BoxMesh" id="Mesh_floor"]
+material = SubResource("Material_floor")
+size = Vector3(72, 0.5, 60)
+
+[sub_resource type="BoxShape3D" id="Shape_floor"]
+size = Vector3(72, 0.5, 60)
+
+[sub_resource type="BoxMesh" id="Mesh_outer_x"]
+material = SubResource("Material_wall")
+size = Vector3(72, 4, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_outer_x"]
+size = Vector3(72, 4, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_outer_z"]
+material = SubResource("Material_wall")
+size = Vector3(1, 4, 60)
+
+[sub_resource type="BoxShape3D" id="Shape_outer_z"]
+size = Vector3(1, 4, 60)
+
+[sub_resource type="BoxMesh" id="Mesh_corridor_x"]
+material = SubResource("Material_wall")
+size = Vector3(14, 4, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_corridor_x"]
+size = Vector3(14, 4, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_corridor_z"]
+material = SubResource("Material_wall")
+size = Vector3(1, 4, 12)
+
+[sub_resource type="BoxShape3D" id="Shape_corridor_z"]
+size = Vector3(1, 4, 12)
+
+[sub_resource type="BoxMesh" id="Mesh_cover_box"]
+material = SubResource("Material_cover")
+size = Vector3(3, 2, 3)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_box"]
+size = Vector3(3, 2, 3)
+
+[sub_resource type="BoxMesh" id="Mesh_cover_wide"]
+material = SubResource("Material_cover")
+size = Vector3(6, 2, 2)
+
+[sub_resource type="BoxShape3D" id="Shape_cover_wide"]
+size = Vector3(6, 2, 2)
+
+[sub_resource type="CylinderMesh" id="Mesh_pillar"]
+material = SubResource("Material_cover")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 4.0
+radial_segments = 12
+
+[sub_resource type="CylinderShape3D" id="Shape_pillar"]
+radius = 1.0
+height = 4.0
+
+[sub_resource type="Environment" id="Environment_arena"]
+background_mode = 1
+background_color = Color(0.055, 0.075, 0.11, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.55, 0.64, 0.78, 1)
+ambient_light_energy = 0.7
+reflected_light_source = 2
+tonemap_mode = 2
+
+[node name="DungeonArena" type="Node3D"]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = ExtResource("1_navmesh")
+
+[node name="Floor" type="StaticBody3D" parent="NavigationRegion3D"]
+position = Vector3(0, -0.25, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Floor"]
+mesh = SubResource("Mesh_floor")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Floor"]
+shape = SubResource("Shape_floor")
+
+[node name="OuterWalls" type="Node3D" parent="NavigationRegion3D"]
+
+[node name="North" type="StaticBody3D" parent="NavigationRegion3D/OuterWalls"]
+position = Vector3(0, 2, -30)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/OuterWalls/North"]
+mesh = SubResource("Mesh_outer_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/OuterWalls/North"]
+shape = SubResource("Shape_outer_x")
+
+[node name="South" type="StaticBody3D" parent="NavigationRegion3D/OuterWalls"]
+position = Vector3(0, 2, 30)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/OuterWalls/South"]
+mesh = SubResource("Mesh_outer_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/OuterWalls/South"]
+shape = SubResource("Shape_outer_x")
+
+[node name="East" type="StaticBody3D" parent="NavigationRegion3D/OuterWalls"]
+position = Vector3(36, 2, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/OuterWalls/East"]
+mesh = SubResource("Mesh_outer_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/OuterWalls/East"]
+shape = SubResource("Shape_outer_z")
+
+[node name="West" type="StaticBody3D" parent="NavigationRegion3D/OuterWalls"]
+position = Vector3(-36, 2, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/OuterWalls/West"]
+mesh = SubResource("Mesh_outer_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/OuterWalls/West"]
+shape = SubResource("Shape_outer_z")
+
+[node name="CorridorWalls" type="Node3D" parent="NavigationRegion3D"]
+
+[node name="WestLaneOuter" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(-27, 2, -13)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/WestLaneOuter"]
+mesh = SubResource("Mesh_corridor_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/WestLaneOuter"]
+shape = SubResource("Shape_corridor_z")
+
+[node name="WestLaneInner" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(-21, 2, -13)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/WestLaneInner"]
+mesh = SubResource("Mesh_corridor_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/WestLaneInner"]
+shape = SubResource("Shape_corridor_z")
+
+[node name="EastLaneInner" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(21, 2, 13)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/EastLaneInner"]
+mesh = SubResource("Mesh_corridor_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/EastLaneInner"]
+shape = SubResource("Shape_corridor_z")
+
+[node name="EastLaneOuter" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(27, 2, 13)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/EastLaneOuter"]
+mesh = SubResource("Mesh_corridor_z")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/EastLaneOuter"]
+shape = SubResource("Shape_corridor_z")
+
+[node name="NorthLaneOuter" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(7, 2, -24)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/NorthLaneOuter"]
+mesh = SubResource("Mesh_corridor_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/NorthLaneOuter"]
+shape = SubResource("Shape_corridor_x")
+
+[node name="NorthLaneInner" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(7, 2, -18)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/NorthLaneInner"]
+mesh = SubResource("Mesh_corridor_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/NorthLaneInner"]
+shape = SubResource("Shape_corridor_x")
+
+[node name="SouthLaneInner" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(-7, 2, 18)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/SouthLaneInner"]
+mesh = SubResource("Mesh_corridor_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/SouthLaneInner"]
+shape = SubResource("Shape_corridor_x")
+
+[node name="SouthLaneOuter" type="StaticBody3D" parent="NavigationRegion3D/CorridorWalls"]
+position = Vector3(-7, 2, 24)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/CorridorWalls/SouthLaneOuter"]
+mesh = SubResource("Mesh_corridor_x")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/CorridorWalls/SouthLaneOuter"]
+shape = SubResource("Shape_corridor_x")
+
+[node name="Cover" type="Node3D" parent="NavigationRegion3D"]
+
+[node name="CenterBoxNW" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(-8, 1, -7)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/CenterBoxNW"]
+mesh = SubResource("Mesh_cover_box")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/CenterBoxNW"]
+shape = SubResource("Shape_cover_box")
+
+[node name="CenterBoxSE" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(8, 1, 7)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/CenterBoxSE"]
+mesh = SubResource("Mesh_cover_box")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/CenterBoxSE"]
+shape = SubResource("Shape_cover_box")
+
+[node name="WestCover" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(-16, 1, 8)
+rotation = Vector3(0, 1.5708, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/WestCover"]
+mesh = SubResource("Mesh_cover_wide")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/WestCover"]
+shape = SubResource("Shape_cover_wide")
+
+[node name="EastCover" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(16, 1, -8)
+rotation = Vector3(0, 1.5708, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/EastCover"]
+mesh = SubResource("Mesh_cover_wide")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/EastCover"]
+shape = SubResource("Shape_cover_wide")
+
+[node name="NorthCover" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(-9, 1, -20)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/NorthCover"]
+mesh = SubResource("Mesh_cover_wide")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/NorthCover"]
+shape = SubResource("Shape_cover_wide")
+
+[node name="SouthCover" type="StaticBody3D" parent="NavigationRegion3D/Cover"]
+position = Vector3(9, 1, 20)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Cover/SouthCover"]
+mesh = SubResource("Mesh_cover_wide")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Cover/SouthCover"]
+shape = SubResource("Shape_cover_wide")
+
+[node name="Pillars" type="Node3D" parent="NavigationRegion3D"]
+
+[node name="PillarNW" type="StaticBody3D" parent="NavigationRegion3D/Pillars"]
+position = Vector3(-11, 2, -11)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Pillars/PillarNW"]
+mesh = SubResource("Mesh_pillar")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Pillars/PillarNW"]
+shape = SubResource("Shape_pillar")
+
+[node name="PillarNE" type="StaticBody3D" parent="NavigationRegion3D/Pillars"]
+position = Vector3(11, 2, -11)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Pillars/PillarNE"]
+mesh = SubResource("Mesh_pillar")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Pillars/PillarNE"]
+shape = SubResource("Shape_pillar")
+
+[node name="PillarSW" type="StaticBody3D" parent="NavigationRegion3D/Pillars"]
+position = Vector3(-11, 2, 11)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Pillars/PillarSW"]
+mesh = SubResource("Mesh_pillar")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Pillars/PillarSW"]
+shape = SubResource("Shape_pillar")
+
+[node name="PillarSE" type="StaticBody3D" parent="NavigationRegion3D/Pillars"]
+position = Vector3(11, 2, 11)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Mesh" type="MeshInstance3D" parent="NavigationRegion3D/Pillars/PillarSE"]
+mesh = SubResource("Mesh_pillar")
+
+[node name="Collision" type="CollisionShape3D" parent="NavigationRegion3D/Pillars/PillarSE"]
+shape = SubResource("Shape_pillar")
+
+[node name="SpawnPoints" type="Node3D" parent="."]
+
+[node name="SpawnPoint1" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-32, 0, -25)
+
+[node name="SpawnPoint2" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(32, 0, -25)
+
+[node name="SpawnPoint3" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-32, 0, 25)
+
+[node name="SpawnPoint4" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(32, 0, 25)
+
+[node name="SpawnPoint5" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-18, 0, -27)
+
+[node name="SpawnPoint6" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(18, 0, 27)
+
+[node name="SpawnPoint7" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(-33, 0, 7)
+
+[node name="SpawnPoint8" type="Marker3D" parent="SpawnPoints"]
+position = Vector3(33, 0, -7)
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+position = Vector3(0, 0.1, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-58, -35, 0)
+light_color = Color(0.92, 0.96, 1, 1)
+light_energy = 1.2
+shadow_enabled = true
+directional_shadow_max_distance = 85.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_arena")

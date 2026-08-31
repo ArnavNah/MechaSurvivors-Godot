@@ -1,0 +1,31 @@
+# Godot generated data
+.godot/
+/.import/
+
+# Exported builds and packages
+/build/
+/builds/
+/export/
+*.apk
+*.aab
+*.pck
+*.zip
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*~
+
+# Local signing material
+*.keystore
+*.jks
+*.p12
+*.pem
